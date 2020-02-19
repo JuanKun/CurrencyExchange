@@ -9,21 +9,24 @@
 import SwiftUI
 
 struct CurrencyPicker: View {
-//    @State var selection = ["Rp IDR","¥ JPY","₩ KRW","$ USD"]
-    @State var currencyChoice = 0
+    @Binding var selection : Int
     let currencyVM = CurrencyViewModel()
     var body: some View {
-       Picker("", selection: $currencyChoice) {
-        ForEach(0 ..< currencyVM.currencies.count) { index in
-                Text(self.currencyVM.currencies[index])
-                    .tag(index)
-                }
-        }.frame(width: UIScreen.main.bounds.width*0.5, height: UIScreen.main.bounds.height*0.1).pickerStyle(WheelPickerStyle())
+        VStack {
+            Spacer()
+            Text("Choose the currency")
+            Picker("", selection: $selection) {
+            ForEach(0 ..< currencyVM.currencies.count) { index in
+                Text(self.currencyVM.labels[index] + " " + self.currencyVM.currencies[index])
+                        .tag(index)
+                    }
+                }.pickerStyle(WheelPickerStyle()).labelsHidden()
+        }
     }
 }
 
 struct CurrencyPicker_Previews: PreviewProvider {
     static var previews: some View {
-        CurrencyPicker()
+        CurrencyPicker(selection: .constant(2))
     }
 }

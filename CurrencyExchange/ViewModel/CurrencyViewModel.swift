@@ -11,11 +11,33 @@ import SwiftUI
 import Combine
 
 class CurrencyViewModel: ObservableObject {
-    @Published var showPicker : Bool = false
     @Published var curString : String = ""
-    @Published var isSheet1 : Bool = false
-    @Published var isSheet2 : Bool = false
+    let currencies = Currencies().currencyArr
+    let labels = Currencies().currencyLabel
+    var objectWillChange = ObservableObjectPublisher()
     
-    let currencies = Currencies().currencyArray
-    let objectWillChange = PassthroughSubject<CurrencyViewModel,Never>()
+    var baseCurrency : Double = 0 {
+        willSet{
+            self.objectWillChange.send()
+        }
+    }
+    
+    var resultCurrency : Double =  0 {
+        willSet{
+            self.objectWillChange.send()
+        }
+    }
+    
+    var showPicker1 : Bool = false {
+        didSet {
+            self.objectWillChange.send()
+        }
+    }
+    
+    var showPicker2 : Bool = false {
+           didSet {
+               self.objectWillChange.send()
+           }
+       }
+    
 }
