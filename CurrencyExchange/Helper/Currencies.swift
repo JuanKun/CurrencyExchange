@@ -17,8 +17,9 @@ protocol CurrenciesDelegate {
 struct Currencies {
     
     var delegate : CurrenciesDelegate?
-    let currencyArr = [Currency.IDR,Currency.JPY,Currency.KRW,Currency.USD,Currency.GBP]
+    let currencyArr = [Currency.IDR.rawValue,Currency.JPY.rawValue,Currency.KRW.rawValue,Currency.USD.rawValue,Currency.GBP.rawValue]
     let currencyLabel = ["Rp","¥","₩","$","£"]
+    
     func CurrencyFetching(currency: String){
         let baseURL = "https://api.exchangerate-api.com/v4/latest/\(currency)"
         

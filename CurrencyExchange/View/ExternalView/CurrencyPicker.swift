@@ -17,7 +17,7 @@ struct CurrencyPicker: View {
             Text("Choose the currency")
             Picker("", selection: $selection) {
             ForEach(0 ..< currencyVM.currencies.count) { index in
-                Text(self.currencyVM.labels[index] + " " + self.currencyVM.currencies[index])
+                Text("\(self.currencyVM.labels[index])" + " " + "\(self.currencyVM.currencies[index])")
                         .tag(index)
                     }
                 }.pickerStyle(WheelPickerStyle()).labelsHidden()

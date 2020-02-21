@@ -27,4 +27,5 @@ struct Nominals: Codable{
     let JPY : Double
     let KRW : Double
     let USD : Double
+    let GBP : Double
 }
