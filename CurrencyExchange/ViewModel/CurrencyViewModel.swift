@@ -13,25 +13,42 @@ import Combine
 class CurrencyViewModel: ObservableObject {
     let currencies = Currencies().currencyArr
     let labels = Currencies().currencyLabel
-    var objectWillChange = ObservableObjectPublisher()
-    var baseCurrency : Double = 0 {
-        willSet{
-            self.objectWillChange.send()
+    var objectWillChange = PassthroughSubject<CurrencyViewModel,Never>()
+    
+    @Published var lastUpdated : String = ""{
+        didSet{
+            objectWillChange.send(self)
         }
     }
-    var resultCurrency : Double =  0 {
+    @Published var baseCurrency : String = String(0) {
         willSet{
-            self.objectWillChange.send()
+            objectWillChange.send(self)
+        }
+    }
+    @Published var resultCurrency : String = String(0) {
+        willSet{
+            objectWillChange.send(self)
         }
     }
     var showPicker1 : Bool = false {
         didSet {
-            self.objectWillChange.send()
+            objectWillChange.send(self)
         }
     }
     var showPicker2 : Bool = false {
            didSet {
-               self.objectWillChange.send()
+               objectWillChange.send(self)
            }
+    }
+    
+    @Published var display1 : Bool = false {
+        didSet{
+            objectWillChange.send(self)
+        }
+    }
+    @Published var display2 : Bool = false {
+        didSet{
+            objectWillChange.send(self)
+        }
     }
 }

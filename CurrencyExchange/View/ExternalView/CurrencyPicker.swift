@@ -10,10 +10,10 @@ import SwiftUI
 
 struct CurrencyPicker: View {
     @Binding var selection : Int
-    let currencyVM = CurrencyViewModel()
+    @EnvironmentObject var currencyVM : CurrencyViewModel
     var body: some View {
         VStack {
-            Spacer()
+//            Spacer()
             Text("Choose the currency")
             Picker("", selection: $selection) {
             ForEach(0 ..< currencyVM.currencies.count) { index in
@@ -23,6 +23,7 @@ struct CurrencyPicker: View {
                 }.pickerStyle(WheelPickerStyle()).labelsHidden()
         }
     }
+    
 }
 
 struct CurrencyPicker_Previews: PreviewProvider {
