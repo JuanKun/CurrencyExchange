@@ -29,9 +29,18 @@ struct Currencies {
                 if let data = data{
                     if let decoded: CurrencyModel = self.decodeData(CurrencyModel.self, data){
                         self.currencyVM.lastUpdated = decoded.date
+                        var newCurrencis = [Currenci]()
+//                        for key in decoded.rates.keys {
+//                            let newCurrenci = Currenci(name: supportedCurrencies[key]? [0] ?? "Unknown", rate: 1.0 / (decoded.rates[key] ?? 1.0))
+//                            newCurrencis.append(newCurrenci)
+//                        }
+                        
+//                        DispatchQueue.main.async {
+//                            <#code#>
+//                        }
                     }
+                    
                 }
-                
             }
         }
         

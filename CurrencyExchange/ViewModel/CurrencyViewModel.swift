@@ -10,6 +10,7 @@ import Foundation
 import SwiftUI
 import Combine
 
+
 class CurrencyViewModel: ObservableObject {
     let currencies = Currencies().currencyArr
     let labels = Currencies().currencyLabel

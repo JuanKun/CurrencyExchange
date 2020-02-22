@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		3BC4456923FC8916002D2E96 /* CurrencyModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BC4456823FC8916002D2E96 /* CurrencyModel.swift */; };
-		3BE1149424003062001B6CF3 /* CurrencyList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE1149324003062001B6CF3 /* CurrencyList.swift */; };
 		3BE11496240033FE001B6CF3 /* ExtView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE11495240033FE001B6CF3 /* ExtView.swift */; };
 		3BE1149824004166001B6CF3 /* BottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE1149724004166001B6CF3 /* BottomSheet.swift */; };
 		3BF3ACC023F7DAF50035757A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BF3ACBF23F7DAF50035757A /* AppDelegate.swift */; };
@@ -24,7 +23,6 @@
 
 /* Begin PBXFileReference section */
 		3BC4456823FC8916002D2E96 /* CurrencyModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyModel.swift; sourceTree = "<group>"; };
-		3BE1149324003062001B6CF3 /* CurrencyList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyList.swift; sourceTree = "<group>"; };
 		3BE11495240033FE001B6CF3 /* ExtView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtView.swift; sourceTree = "<group>"; };
 		3BE1149724004166001B6CF3 /* BottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheet.swift; sourceTree = "<group>"; };
 		3BF3ACBC23F7DAF50035757A /* CurrencyExchange.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CurrencyExchange.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -122,7 +120,6 @@
 			isa = PBXGroup;
 			children = (
 				3BC4456823FC8916002D2E96 /* CurrencyModel.swift */,
-				3BE1149324003062001B6CF3 /* CurrencyList.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -211,7 +208,6 @@
 				3BF5F77923F81EA900D8ADC5 /* CurrencyPicker.swift in Sources */,
 				3BF3ACC023F7DAF50035757A /* AppDelegate.swift in Sources */,
 				3BF3ACD723F7DDA20035757A /* CurrencyViewModel.swift in Sources */,
-				3BE1149424003062001B6CF3 /* CurrencyList.swift in Sources */,
 				3BF3ACC223F7DAF50035757A /* SceneDelegate.swift in Sources */,
 				3BE1149824004166001B6CF3 /* BottomSheet.swift in Sources */,
 				3BE11496240033FE001B6CF3 /* ExtView.swift in Sources */,

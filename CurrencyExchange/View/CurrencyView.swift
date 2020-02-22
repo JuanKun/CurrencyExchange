@@ -34,31 +34,31 @@ struct CurrencyView: View {
             ZStack{
                 VStack{
                     Spacer().frame(height: self.screenHeight*0.03)
-                    Image("currencyLogo").resizable().frame(width: self.screenWidth*0.5, height: self.screenHeight*0.3, alignment: .center).foregroundColor(.blue)
-                    Spacer().frame(height: self.screenHeight*0.07)
+                    Image("currencyLogo").resizable().frame(width: self.screenWidth*0.5, height: self.screenHeight*0.3, alignment: .center).shadow(radius: 10)
+                    Spacer().frame(height: self.screenHeight*0.1)
                     HStack{
                         Spacer()
                         //BaseCurrencyLabel
                         HStack{
-                            Text("\(self.currencyVM.currencies[self.selection1])").onTapGesture {
+                            Text("\(self.currencyVM.labels[self.selection1])"+" "+"\(self.currencyVM.currencies[self.selection1])").onTapGesture {
                                 self.currencyVM.showPicker1.toggle()
                                 self.currencyVM.showPicker2 = false
                                 if self.isActiveField == true{
                                     self.dismissKeyboard()
                                 }
                             }
-                        }.foregroundColor(self.currencyVM.showPicker1 ? .red : .blue ).frame(width: self.screenWidth*0.4)
+                        }.foregroundColor(self.currencyVM.showPicker1 ? .red : .blue ).frame(width: self.screenWidth*0.45)
                         Spacer()
                         //ResultCurrencyLabel
                         HStack{
-                            Text("\(self.currencyVM.currencies[self.selection2])").onTapGesture {
+                            Text("\(self.currencyVM.labels[self.selection2])"+" "+"\(self.currencyVM.currencies[self.selection2])").onTapGesture {
                                 self.currencyVM.showPicker2.toggle()
                                 self.currencyVM.showPicker1 = false
                                 if self.isActiveField == true{
                                     self.dismissKeyboard()
                                 }
                             }
-                        }.foregroundColor(self.currencyVM.showPicker2 ? .red : .blue ).frame(width: self.screenWidth*0.4)
+                        }.foregroundColor(self.currencyVM.showPicker2 ? .red : .blue ).frame(width: self.screenWidth*0.45)
                         Spacer()
                     }
                     Spacer().frame(height: self.screenHeight*0.0005)
@@ -75,22 +75,26 @@ struct CurrencyView: View {
                                 if self.currencyVM.showPicker1 == true || self.currencyVM.showPicker2 == true {
                                     self.dismissPicker()
                                 }
-                        }).keyboardType(.numberPad).textFieldStyle(RoundedBorderTextFieldStyle()).frame(width: self.screenWidth*0.35)
+                        }).keyboardType(.decimalPad).textFieldStyle(RoundedBorderTextFieldStyle()).frame(width: self.screenWidth*0.35)
                         Spacer()
                         Image(systemName: "equal").frame(width: self.screenWidth*0.1, height: self.screenHeight*0.05)
                         Spacer()
                         //ResultCurrency
-                        TextField("0",
-                                  text: self.$currencyVM.resultCurrency,
-                            onEditingChanged:  {_ in
-                                 if self.isActiveField == true {
-                                    self.dismissKeyboard()
-                                }
-                                self.isActiveField.toggle()
-                                if self.currencyVM.showPicker1 == true || self.currencyVM.showPicker2 == true {
-                                    self.dismissPicker()
-                                }
-                        }).keyboardType(.numberPad).textFieldStyle(RoundedBorderTextFieldStyle()).frame(width: self.screenWidth*0.35)
+                        ZStack{
+                            Rectangle().frame(width: self.screenWidth*0.35, height: self.screenHeight*0.05).foregroundColor(.secondary).cornerRadius(5).opacity(0.5)
+                            Text("100000").frame(width: self.screenWidth*0.35)
+                        }
+//                        TextField("0",
+//                                  text: self.$currencyVM.resultCurrency,
+//                            onEditingChanged:  {_ in
+//                                 if self.isActiveField == true {
+//                                    self.dismissKeyboard()
+//                                }
+//                                self.isActiveField.toggle()
+//                                if self.currencyVM.showPicker1 == true || self.currencyVM.showPicker2 == true {
+//                                    self.dismissPicker()
+//                                }
+//                        }).keyboardType(.decimalPad).textFieldStyle(RoundedBorderTextFieldStyle()).frame(width: self.screenWidth*0.35)
                         Spacer()
                     }.frame(height: self.screenHeight*0.1)
                     Spacer()
@@ -102,9 +106,10 @@ struct CurrencyView: View {
                         self.dismissPicker()
                     }
                 }.onAppear{
-                    Currencies.init(currencyVM: EnvironmentObject<CurrencyViewModel>()).CurrencyFetching()
+                    print("KAKA")
+                    print(self.currencyVM.lastUpdated)
                 }
-                //ShowingPickers
+                //ShowingPickersInZStackedView
                 if self.currencyVM.showPicker1 {
                     BottomSheet(display: self.$currencyVM.showPicker1){
                         CurrencyPicker(selection: self.$selection1)
