@@ -10,44 +10,65 @@ import Foundation
 import SwiftUI
 import Combine
 
+private let defaultCurrencies: [Currency] = [
+    Currency(name: "US dollar", rate: 1.0, symbol: "US", code: "USD"),
+    Currency(name: "Canadian dollar", rate: 1.0, symbol: "CA", code: "CAD")
+]
+
+@propertyWrapper
+struct UserDefaultValue<T:Codable> {
+    let key: String
+    let defaultValue: T
+    
+    init(key: String, defaultValue: T) {
+        self.key = key
+        self.defaultValue = defaultValue
+    }
+    var wrappedValue: T {
+        get {
+            let data = UserDefaults.standard.data(forKey: key)
+            let value = data.flatMap { try? JSONDecoder().decode(T.self, from: $0)}
+            return value ?? defaultValue
+        }
+        set {
+            let data = try? JSONEncoder().encode(newValue)
+            UserDefaults.standard.set(data, forKey: key)
+        }
+    }
+}
 
 class CurrencyViewModel: ObservableObject {
-    let currencies = Currencies().currencyArr
-    let labels = Currencies().currencyLabel
+    let currencies = supportedCurrencies
+//    let labels = Currencies().currencyLabel
     var objectWillChange = PassthroughSubject<CurrencyViewModel,Never>()
     
-    @Published var lastUpdated : String = ""{
+    @UserDefaultValue(key: "baseCurrency", defaultValue: defaultCurrencies[0])
+    var baseCurrency: Currency {
         didSet{
             objectWillChange.send(self)
         }
     }
-    @Published var baseCurrency : String = String(0) {
-        willSet{
-            objectWillChange.send(self)
-        }
-    }
-    @Published var resultCurrency : String = String(0) {
-        willSet{
-            objectWillChange.send(self)
-        }
-    }
-    var showPicker1 : Bool = false {
+    
+    @UserDefaultValue(key: "allCurrencies", defaultValue: defaultCurrencies)
+    var allCurrencies: [Currency] {
         didSet {
             objectWillChange.send(self)
         }
     }
-    var showPicker2 : Bool = false {
-           didSet {
-               objectWillChange.send(self)
-           }
-    }
-    
-    @Published var display1 : Bool = false {
-        didSet{
+    @UserDefaultValue(key: "userCurrency", defaultValue: defaultCurrencies)
+    var userCurrency: [Currency] {
+        didSet {
             objectWillChange.send(self)
         }
     }
-    @Published var display2 : Bool = false {
+    
+    var showPicker : Bool = false {
+        didSet {
+            objectWillChange.send(self)
+        }
+    }
+    
+    @Published var display : Bool = false {
         didSet{
             objectWillChange.send(self)
         }
