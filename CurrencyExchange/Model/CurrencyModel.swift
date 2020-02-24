@@ -17,6 +17,7 @@ enum Currencee: String {
     case THB = "THB"
     case EUR = "EUR"
     case SGD = "SGD"
+    
 }
 
 struct CurrencyModel: Codable{

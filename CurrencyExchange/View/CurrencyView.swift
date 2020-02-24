@@ -12,9 +12,10 @@ struct CurrencyView: View {
     //Variables and Constants
     @EnvironmentObject var currencyVM : CurrencyViewModel
     @State var isActiveField = false
+    @State var isAlert = false
     @State var selection1 = 2
     @State var selection2 = 1
-    @State var baseAmount = "1.0"
+    @State var baseAmount = "0"
     @State var lastUpdated = ""
     let screenWidth = UIScreen.main.bounds.width
     let screenHeight = UIScreen.main.bounds.height
@@ -22,15 +23,18 @@ struct CurrencyView: View {
     private func dismissKeyboard(){
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to:nil, from:nil, for:nil)
         self.isActiveField = false
-        print(self.currencyVM.baseCurrency)
+        if self.baseAmount == "" {
+            self.baseAmount = "0"
+        }
     }
     
     private func dismissPicker(){
         self.currencyVM.showPicker = false
     }
     let inset = EdgeInsets(top: -8, leading: -20, bottom: -7, trailing: 5)
-    let doubleValue: Double = Double() ?? 1.0
+    
     var body: some View {
+//        return let doubleValue :Double = Double(self.$baseAmount.wrappedValue) ?? 0.0 
         GeometryReader{geomtry in
             ZStack{
                 VStack{
@@ -38,7 +42,8 @@ struct CurrencyView: View {
                     Spacer().frame(height: self.screenWidth*0.01)
                     HStack{
                         Spacer().frame(width: self.screenWidth*0.02)
-                        Text("Currex 💱").font(.largeTitle).fontWeight(.bold).foregroundColor(.purple)
+                        Image(systemName: "coloncurrencysign.square.fill").resizable().frame(width: self.screenWidth*0.06, height: self.screenWidth*0.06).foregroundColor(.purple)
+                        Text("Currex").font(.largeTitle).fontWeight(.bold).foregroundColor(.purple)
                         Spacer()
                     }
                     Spacer().frame(height: self.screenHeight*0.03)
@@ -57,7 +62,6 @@ struct CurrencyView: View {
                         Spacer()
                         TextField(self.baseAmount, text: self.$baseAmount, onEditingChanged: { _ in
                             self.isActiveField.toggle()
-                            print("Mulai Ketik")
                         }, onCommit: {
                             print("Masih Ketik")
                         }).foregroundColor(.white).multilineTextAlignment(.trailing).keyboardType(.decimalPad)
@@ -80,9 +84,12 @@ struct CurrencyView: View {
                     List {
                     // TODO: should filter out BaseCurrency from list
                         ForEach(self.currencyVM.allCurrencies) { currency in
-                            CurrencyItemView(currency: currency, baseAmount: self.doubleValue).onTapGesture {
+                            CurrencyItemView(currency: currency, baseAmount: Double(self.$baseAmount.wrappedValue) ?? 0.0).onTapGesture {
                                 // Swap this and base
                                 self.currencyVM.baseCurrency = currency
+                                self.isAlert.toggle()
+                            }.alert(isPresented: self.$isAlert) {
+                                Alert(title: Text(""), message: Text("Base currency changed to: \n \(self.currencyVM.baseCurrency.name)"), dismissButton: .default(Text("OK")))
                             }
                         }
                     }
