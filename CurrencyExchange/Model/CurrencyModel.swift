@@ -13,11 +13,11 @@ enum Currencee: String {
     case JPY = "JPY"
     case KRW = "KRW"
     case USD = "USD"
-    case GBP = "GBP"
+    case MYR = "MYR"
     case THB = "THB"
-    case EUR = "EUR"
+    case PHP = "PHP"
     case SGD = "SGD"
-    
+    case CNY = "CNY"
 }
 
 struct CurrencyModel: Codable{
@@ -66,7 +66,7 @@ let supportedCurrencies: [String: [String]] = [
     "PLN": ["Polish złoty", "PL"],
     "NOK": ["Norwegian krone", "NO"],
     "USD": ["US Dollar", "US"],
-    "CNY": ["Chinese Renminbi", "CN"],
+    "CNY": ["Chinese yuan", "CN"],
     "RUB": ["Russian ruble", "RU"],
     "SEK": ["Swedish krona", "SE"],
     "MYR": ["Malaysian ringgit", "MY"],

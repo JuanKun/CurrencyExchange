@@ -41,7 +41,23 @@ class CurrencyViewModel: ObservableObject {
     let currencies = supportedCurrencies
 //    let labels = Currencies().currencyLabel
     var objectWillChange = PassthroughSubject<CurrencyViewModel,Never>()
+    var binding = ObjectWillChangePublisher()
+    @Published var isActiveField: Bool = false {
+        didSet{
+            objectWillChange.send(self)
+        }
+    }
     
+    @Published var isAlert: Bool = false {
+        didSet{
+            objectWillChange.send(self)
+        }
+    }
+    @Published var baseAmount: String = "0" {
+        didSet{
+            objectWillChange.send(self)
+        }
+    }
     @UserDefaultValue(key: "baseCurrency", defaultValue: defaultCurrencies[0])
     var baseCurrency: Currency {
         didSet{

@@ -12,16 +12,14 @@ import SwiftUI
 struct CurrencyItemView: View {
     @EnvironmentObject var currencyVM: CurrencyViewModel
     let currency: Currency
-//    let baseAmount: String
     let baseAmount: Double
-//    @Binding var isEditing: Bool
     var body: some View {
         let currency = self.currency
-        let conversionRate = String(format: "%.4f", currency.rate / currencyVM.baseCurrency.rate)
-        let totalAmount = String(format: "%.3f", Double(baseAmount) * ( currencyVM.baseCurrency.rate / currency.rate))
+        let conversionRate = String(format: "%.2f", currency.rate / currencyVM.baseCurrency.rate)
+        let totalAmount = String(format: "%.2f", Double(baseAmount) * ( currencyVM.baseCurrency.rate / currency.rate))
 
         return HStack{
-            Text(currency.flag).font(.largeTitle)
+            Text(currency.flag).font(.largeTitle).fontWeight(.bold)
             VStack(alignment: .leading){
                 Text(currency.code).font(.headline).foregroundColor(.primary)
                 Text(currency.name).font(.footnote).foregroundColor(.secondary)

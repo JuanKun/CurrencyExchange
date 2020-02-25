@@ -11,20 +11,15 @@ import SwiftUI
 struct CurrencyView: View {
     //Variables and Constants
     @EnvironmentObject var currencyVM : CurrencyViewModel
-    @State var isActiveField = false
-    @State var isAlert = false
-    @State var selection1 = 2
-    @State var selection2 = 1
-    @State var baseAmount = "0"
+    @ObservedObject var binding = CurrencyViewModel()
     @State var lastUpdated = ""
     let screenWidth = UIScreen.main.bounds.width
     let screenHeight = UIScreen.main.bounds.height
-    
     private func dismissKeyboard(){
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to:nil, from:nil, for:nil)
-        self.isActiveField = false
-        if self.baseAmount == "" {
-            self.baseAmount = "0"
+        self.binding.isActiveField = false
+        if self.binding.baseAmount == "" {
+            self.binding.baseAmount = "0"
         }
     }
     
@@ -34,7 +29,7 @@ struct CurrencyView: View {
     let inset = EdgeInsets(top: -8, leading: -20, bottom: -7, trailing: 5)
     
     var body: some View {
-//        return let doubleValue :Double = Double(self.$baseAmount.wrappedValue) ?? 0.0 
+//        return let doubleValue :Double = Double(self.$baseAmount.wrappedValue) ?? 0.0
         GeometryReader{geomtry in
             ZStack{
                 VStack{
@@ -60,11 +55,14 @@ struct CurrencyView: View {
                             Text(self.currencyVM.baseCurrency.name).foregroundColor(.white)
                         }
                         Spacer()
-                        TextField(self.baseAmount, text: self.$baseAmount, onEditingChanged: { _ in
-                            self.isActiveField.toggle()
+                        TextField(self.binding.baseAmount, text: self.$binding.baseAmount, onEditingChanged: { _ in
+                            self.binding.isActiveField.toggle()
+                            if self.binding.baseAmount == "0"{
+                                self.binding.baseAmount = ""
+                            }
                         }, onCommit: {
                             print("Masih Ketik")
-                        }).foregroundColor(.white).multilineTextAlignment(.trailing).keyboardType(.decimalPad)
+                        }).foregroundColor(.white).multilineTextAlignment(.trailing).keyboardType(.numberPad)
                             .background(
                                 RoundedRectangle(cornerRadius: 5)
                                     .foregroundColor(.clear)
@@ -84,14 +82,14 @@ struct CurrencyView: View {
                     List {
                     // TODO: should filter out BaseCurrency from list
                         ForEach(self.currencyVM.allCurrencies) { currency in
-                            CurrencyItemView(currency: currency, baseAmount: Double(self.$baseAmount.wrappedValue) ?? 0.0).onTapGesture {
+                            CurrencyItemView(currency: currency, baseAmount: Double(self.$binding.baseAmount.wrappedValue) ?? 0.0).onTapGesture {
                                 // Swap this and base
                                 self.currencyVM.baseCurrency = currency
-                                self.isAlert.toggle()
-                            }.alert(isPresented: self.$isAlert) {
+                                self.binding.isAlert.toggle()
+                            }.alert(isPresented: self.$binding.isAlert) {
                                 Alert(title: Text(""), message: Text("Base currency changed to: \n \(self.currencyVM.baseCurrency.name)"), dismissButton: .default(Text("OK")))
                             }
-                        }
+                        }.listStyle(GroupedListStyle())
                     }
                     
                     HStack{
@@ -124,7 +122,18 @@ struct CurrencyView: View {
                         var newCurrencies = [Currency]()
                         for key in decoded.rates.keys {
                             let newCurrency = Currency(name: supportedCurrencies[key]?[0] ?? "Unknown", rate: 1.0 / (decoded.rates[key] ?? 1.0), symbol: supportedCurrencies[key]?[1] ?? "", code: key)
-                            newCurrencies.append(newCurrency)
+                            if
+                            newCurrency.code == Currencee.THB.rawValue ||
+                            newCurrency.code == Currencee.CNY.rawValue ||
+                            newCurrency.code == Currencee.USD.rawValue ||
+                            newCurrency.code == Currencee.JPY.rawValue ||
+                            newCurrency.code == Currencee.SGD.rawValue ||
+                            newCurrency.code == Currencee.PHP.rawValue ||
+                            newCurrency.code == Currencee.MYR.rawValue ||
+                            newCurrency.code == Currencee.KRW.rawValue ||
+                            newCurrency.code == Currencee.IDR.rawValue {
+                                newCurrencies.append(newCurrency)
+                            }
                         }
                         
                         DispatchQueue.main.async {

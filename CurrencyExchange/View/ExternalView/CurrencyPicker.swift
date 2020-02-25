@@ -24,7 +24,7 @@
 //                }.pickerStyle(WheelPickerStyle()).labelsHidden()
 //        }
 //    }
-//    
+//
 //}
 //
 //struct CurrencyPicker_Previews: PreviewProvider {
