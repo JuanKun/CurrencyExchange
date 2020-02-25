@@ -79,7 +79,7 @@ struct CurrencyView: View {
                         Spacer()
                     }
                     Spacer()
-                    List {
+                    ScrollView {
                     // TODO: should filter out BaseCurrency from list
                         ForEach(self.currencyVM.allCurrencies) { currency in
                             CurrencyItemView(currency: currency, baseAmount: Double(self.$binding.baseAmount.wrappedValue) ?? 0.0).onTapGesture {
@@ -125,7 +125,6 @@ struct CurrencyView: View {
                             if
                             newCurrency.code == Currencee.THB.rawValue ||
                             newCurrency.code == Currencee.CNY.rawValue ||
-                            newCurrency.code == Currencee.USD.rawValue ||
                             newCurrency.code == Currencee.JPY.rawValue ||
                             newCurrency.code == Currencee.SGD.rawValue ||
                             newCurrency.code == Currencee.PHP.rawValue ||

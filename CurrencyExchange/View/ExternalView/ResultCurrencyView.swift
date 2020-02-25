@@ -17,7 +17,6 @@ struct CurrencyItemView: View {
         let currency = self.currency
         let conversionRate = String(format: "%.2f", currency.rate / currencyVM.baseCurrency.rate)
         let totalAmount = String(format: "%.2f", Double(baseAmount) * ( currencyVM.baseCurrency.rate / currency.rate))
-
         return HStack{
             Text(currency.flag).font(.largeTitle).fontWeight(.bold)
             VStack(alignment: .leading){
@@ -29,6 +28,6 @@ struct CurrencyItemView: View {
                 Text("\(totalAmount)")
                 Text("1 \(currency.code) = \(conversionRate) \(currencyVM.baseCurrency.code)").foregroundColor(.secondary)
             }
-        }
+        }.padding()
     }
 }
