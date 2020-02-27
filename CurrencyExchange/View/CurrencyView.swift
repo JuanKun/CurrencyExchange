@@ -140,14 +140,6 @@ struct CurrencyView: View {
                             if let base = self.currencyVM.allCurrencies.filter({ $0.symbol == self.currencyVM.baseCurrency.symbol }).first {
                                 self.currencyVM.baseCurrency = base
                             }
-                            var tempNewUserCurrency = [Currency]()
-                            let userCurrencies = self.currencyVM.userCurrency.map{$0.code }
-                            for c in self.currencyVM.allCurrencies {
-                                if userCurrencies.contains(c.code){
-                                    tempNewUserCurrency.append(c)
-                                }
-                            }
-                            self.currencyVM.userCurrency = tempNewUserCurrency
                         }
                     }
                 }
