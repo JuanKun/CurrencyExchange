@@ -12,7 +12,6 @@ enum Currencee: String {
     case IDR = "IDR"
     case JPY = "JPY"
     case KRW = "KRW"
-    case USD = "USD"
     case MYR = "MYR"
     case THB = "THB"
     case PHP = "PHP"

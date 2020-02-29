@@ -11,8 +11,7 @@ import SwiftUI
 import Combine
 
 private let defaultCurrencies: [Currency] = [
-    Currency(name: "US dollar", rate: 1.0, symbol: "US", code: "USD"),
-    Currency(name: "Canadian dollar", rate: 1.0, symbol: "CA", code: "CAD")
+    Currency(name: "Indonesia rupiah", rate: 1.0, symbol: "ID", code: "IDR")
 ]
 
 @propertyWrapper
@@ -47,7 +46,6 @@ class CurrencyViewModel: ObservableObject {
             objectWillChange.send(self)
         }
     }
-    
     @Published var isAlert: Bool = false {
         didSet{
             objectWillChange.send(self)
@@ -64,28 +62,9 @@ class CurrencyViewModel: ObservableObject {
             objectWillChange.send(self)
         }
     }
-    
     @UserDefaultValue(key: "allCurrencies", defaultValue: defaultCurrencies)
     var allCurrencies: [Currency] {
         didSet {
-            objectWillChange.send(self)
-        }
-    }
-    @UserDefaultValue(key: "userCurrency", defaultValue: defaultCurrencies)
-    var userCurrency: [Currency] {
-        didSet {
-            objectWillChange.send(self)
-        }
-    }
-    
-    var showPicker : Bool = false {
-        didSet {
-            objectWillChange.send(self)
-        }
-    }
-    
-    @Published var display : Bool = false {
-        didSet{
             objectWillChange.send(self)
         }
     }

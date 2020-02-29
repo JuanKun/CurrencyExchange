@@ -8,11 +8,14 @@
 
 import SwiftUI
 
+//MARK: View Generator
 struct CurrencyView: View {
     //Variables and Constants
     @EnvironmentObject var currencyVM : CurrencyViewModel
     @ObservedObject var binding = CurrencyViewModel()
     @State var lastUpdated = ""
+    @State var  errMessage = ""
+    @State var isnotConnected = false
     let screenWidth = UIScreen.main.bounds.width
     let screenHeight = UIScreen.main.bounds.height
     private func dismissKeyboard(){
@@ -22,14 +25,9 @@ struct CurrencyView: View {
             self.binding.baseAmount = "0"
         }
     }
-    
-    private func dismissPicker(){
-        self.currencyVM.showPicker = false
-    }
     let inset = EdgeInsets(top: -8, leading: -20, bottom: -7, trailing: 5)
-    
+
     var body: some View {
-//        return let doubleValue :Double = Double(self.$baseAmount.wrappedValue) ?? 0.0
         GeometryReader{geomtry in
             ZStack{
                 VStack{
@@ -40,6 +38,8 @@ struct CurrencyView: View {
                         Image(systemName: "coloncurrencysign.square.fill").resizable().frame(width: self.screenWidth*0.06, height: self.screenWidth*0.06).foregroundColor(.purple)
                         Text("Currex").font(.largeTitle).fontWeight(.bold).foregroundColor(.purple)
                         Spacer()
+                    }.onTapGesture {
+                        self.loadCurrencies()
                     }
                     Spacer().frame(height: self.screenHeight*0.03)
                     //BASE-CURRENCY
@@ -94,62 +94,26 @@ struct CurrencyView: View {
                     
                     HStack{
                         Spacer().frame(width: self.screenWidth*0.02)
-                        Text("Updated in : " + "\(self.lastUpdated)").font(.headline).foregroundColor(.purple)
+                        Text("Updated in : " + "\(self.lastUpdated)").font(.headline).foregroundColor(.purple).alert(isPresented: self.$isnotConnected){
+                            Alert(title: Text("Connection Issue"), message: Text(self.errMessage), dismissButton: .default(Text("OK")))
+                        }
                         Spacer()
                     }
                 }
             }.onTapGesture {
                 self.dismissKeyboard()
             }.onAppear{
+                
                 self.loadCurrencies()
                 print(self.currencyVM.allCurrencies)
             }
         }
     }
-    
-    private func loadCurrencies() {
-            // Check if last updated is the same date
-            // if not the same pull from remote with base currency
-            let url = URL(string: "https://api.exchangeratesapi.io/latest?base=USD")!
-
-            let task = URLSession.shared.dataTask(with: url, completionHandler: { data, _, _ in
-                if let data = data {
-                    if let decoded: CurrencyModel = self.decodeData(CurrencyModel.self, data){
-                        //
-                        self.lastUpdated = decoded.date
-                        
-                        // generate currency data
-                        var newCurrencies = [Currency]()
-                        for key in decoded.rates.keys {
-                            let newCurrency = Currency(name: supportedCurrencies[key]?[0] ?? "Unknown", rate: 1.0 / (decoded.rates[key] ?? 1.0), symbol: supportedCurrencies[key]?[1] ?? "", code: key)
-                            if
-                            newCurrency.code == Currencee.THB.rawValue ||
-                            newCurrency.code == Currencee.CNY.rawValue ||
-                            newCurrency.code == Currencee.JPY.rawValue ||
-                            newCurrency.code == Currencee.SGD.rawValue ||
-                            newCurrency.code == Currencee.PHP.rawValue ||
-                            newCurrency.code == Currencee.MYR.rawValue ||
-                            newCurrency.code == Currencee.KRW.rawValue ||
-                            newCurrency.code == Currencee.IDR.rawValue {
-                                newCurrencies.append(newCurrency)
-                            }
-                        }
-                        
-                        DispatchQueue.main.async {
-                            self.currencyVM.allCurrencies = newCurrencies
-                            if let base = self.currencyVM.allCurrencies.filter({ $0.symbol == self.currencyVM.baseCurrency.symbol }).first {
-                                self.currencyVM.baseCurrency = base
-                            }
-                        }
-                    }
-                }
-            })
-            task.resume()
-        }
 }
-
+//MARK: Networking Session
 extension CurrencyView {
-    private func decodeData<T>(_ decodeObject: T.Type, _ data: Data) -> T? where T: Codable
+    
+    public func decodeData<T>(_ decodeObject: T.Type, _ data: Data) -> T? where T: Codable
     {
         let decoder = JSONDecoder()
         do
@@ -162,11 +126,45 @@ extension CurrencyView {
             return nil
         }
     }
-}
+    
+    public func loadCurrencies() {
+        let url = URL(string: "https://api.exchangeratesapi.io/latest?base=IDR")!
 
-
-struct CurrencyView_Previews: PreviewProvider {
-    static var previews: some View {
-        CurrencyView()
+        let task = URLSession.shared.dataTask(with: url, completionHandler: { data, response, error in
+            if let error = error {
+                self.isnotConnected.toggle()
+                self.errMessage = error.localizedDescription
+            } else if let data = data {
+                if let decoded: CurrencyModel = self.decodeData(CurrencyModel.self, data){
+                    //
+                    self.lastUpdated = decoded.date
+                    
+                    // generate currency data
+                    var newCurrencies = [Currency]()
+                    for key in decoded.rates.keys {
+                        let newCurrency = Currency(name: supportedCurrencies[key]?[0] ?? "Unknown", rate: 1.0 / (decoded.rates[key] ?? 1.0), symbol: supportedCurrencies[key]?[1] ?? "", code: key)
+                        if
+                        newCurrency.code == Currencee.THB.rawValue ||
+                        newCurrency.code == Currencee.CNY.rawValue ||
+                        newCurrency.code == Currencee.JPY.rawValue ||
+                        newCurrency.code == Currencee.SGD.rawValue ||
+                        newCurrency.code == Currencee.PHP.rawValue ||
+                        newCurrency.code == Currencee.MYR.rawValue ||
+                        newCurrency.code == Currencee.KRW.rawValue ||
+                        newCurrency.code == Currencee.IDR.rawValue {
+                            newCurrencies.append(newCurrency)
+                        }
+                    }
+                    
+                    DispatchQueue.main.async {
+                        self.currencyVM.allCurrencies = newCurrencies
+                        if let base = self.currencyVM.allCurrencies.filter({ $0.symbol == self.currencyVM.baseCurrency.symbol }).first {
+                            self.currencyVM.baseCurrency = base
+                        }
+                    }
+                }
+            }
+        })
+        task.resume()
     }
 }
